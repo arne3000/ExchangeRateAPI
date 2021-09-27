@@ -3,36 +3,23 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace PriceConversionAPI.Services
 {
     public class ExchangeRateService : IExchangeRateService
     {
-        private readonly HttpClient httpClient;
+        private readonly IExchangeRateApiService apiService;
 
-        public ExchangeRateService(HttpClient httpClient)
+        public ExchangeRateService(IExchangeRateApiService apiService)
         {
-            this.httpClient = httpClient;
+            this.apiService = apiService;
         }
 
         public async Task<double?> GetExchangeRateAsync(string sourceCurrency, string targetCurrency)
         {
-            HttpResponseMessage response = await this.httpClient.GetAsync($"api/latest/{sourceCurrency}.json");
+            ExchangeRate exchangeRate = await this.apiService.GetExchangeRateAsync(sourceCurrency);
 
-            response.EnsureSuccessStatusCode();
-
-            ExchangeRate exchangeRate;
-
-            using (Stream responseStream = await response.Content.ReadAsStreamAsync())
-            {
-                exchangeRate = await JsonSerializer.DeserializeAsync<ExchangeRate>(responseStream);
-            }
-
-            return this.GetTargetExchangeRate(exchangeRate, targetCurrency);
-        }
-
-        public double? GetTargetExchangeRate(ExchangeRate exchangeRate, string targetCurrency)
-        {
             if (exchangeRate.ExchangeRates != null && exchangeRate.ExchangeRates.TryGetValue(targetCurrency, out double rate))
             {
                 return rate;

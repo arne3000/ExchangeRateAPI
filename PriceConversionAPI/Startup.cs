@@ -24,17 +24,18 @@ namespace PriceConversionAPI
 
             services.AddScoped<IPriceConversionService, PriceConversionService>();
             services.AddScoped<IPriceCalculatorService, PriceCalculatorService>();
-
-            services.AddHttpClient<IExchangeRateService, ExchangeRateService>(client =>
+            services.AddScoped<IExchangeRateService, ExchangeRateService>();
+            services.AddHttpClient<IExchangeRateApiService, ExchangeRateApiService>(client =>
             {
-                client.BaseAddress = new Uri("https://trainlinerecruitment.github.io/exchangerates");
+                client.BaseAddress = new Uri("https://trainlinerecruitment.github.io");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             })
             .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
             {
                 TimeSpan.FromSeconds(1),
                 TimeSpan.FromSeconds(5),
-                TimeSpan.FromSeconds(10)
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20)
             }));
         }
 

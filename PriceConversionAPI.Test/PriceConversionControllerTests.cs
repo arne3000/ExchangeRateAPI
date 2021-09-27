@@ -11,7 +11,7 @@ namespace PriceConversionAPI.Test
     public class PriceConversionControllerTests
     {
         [TestMethod]
-        public async Task Get_DefaultParameters_ReturnsOk()
+        public async Task GetAsync_DefaultParameters_ReturnsOk()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
@@ -33,7 +33,7 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public async Task Get_NoConversion_ReturnsNotFound()
+        public async Task GetAsync_NoConversion_ReturnsNotFound()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
@@ -51,7 +51,7 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public async Task Get_NullSourceParameter_ReturnsBadRequest()
+        public async Task GetAsync_NullSourceParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
@@ -68,7 +68,7 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public async Task Get_EmptySourceParameter_ReturnsBadRequest()
+        public async Task GetAsync_EmptySourceParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
@@ -85,7 +85,7 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public async Task Get_NullTargetParameter_ReturnsBadRequest()
+        public async Task GetAsync_NullTargetParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
@@ -102,7 +102,7 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public async Task Get_SourceTargetParameter_ReturnsBadRequest()
+        public async Task GetAsync_SourceTargetParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();

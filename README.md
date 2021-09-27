@@ -3,13 +3,13 @@
 Convert a value from a source currency to a target currency.
 
 ```
-/priceconversion?source={source_currency}&target={target_currency}&price={price}
+/api/priceconversion?source={source_currency}&target={target_currency}&price={price}
 ```
 
 e.g.
 
 ```
-/priceconversion?source=GBR&target=EUR&price=1.00
+/api/priceconversion?source=GBR&target=EUR&price=1.00
 ```
 
 

@@ -40,7 +40,7 @@ namespace PriceConversionAPI.Controllers
             }
             else
             {
-                return NotFound();
+                return NotFound("The target currency is not supported.");
             }
         }
     }
