@@ -4,17 +4,31 @@ using System.Threading.Tasks;
 
 namespace PriceConversionAPI.Controllers
 {
+    /// <summary>
+    ///     The price conversion controller.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class PriceConversionController : ControllerBase
     {
         private readonly IPriceConversionService priceConversionService;
 
+        /// <summary>
+        ///     Initialise the price conversion controller.
+        /// </summary>
+        /// <param name="priceConversionService">The price conversion service.</param>
         public PriceConversionController(IPriceConversionService priceConversionService)
         {
             this.priceConversionService = priceConversionService;
         }
 
+        /// <summary>
+        ///     Get the converted price to an exchange rate target.
+        /// </summary>
+        /// <param name="source">The source currency to convert from.</param>
+        /// <param name="target">The target currency to convert to.</param>
+        /// <param name="price">The price to convert.</param>
+        /// <returns>The converted price and the currency it was converted to.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAsync(string source, string target, double price)
         {
