@@ -20,7 +20,7 @@ namespace PriceConversionAPI.Controllers
             return new PriceConversion
             {
                 TargetCurrency = target,
-                Price
+                Price = price
             };
         }
     }
