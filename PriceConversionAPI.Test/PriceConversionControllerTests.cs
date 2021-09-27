@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PriceConversionAPI.Controllers;
 using PriceConversionAPI.Services;
+using System.Threading.Tasks;
 
 namespace PriceConversionAPI.Test
 {
@@ -10,21 +11,15 @@ namespace PriceConversionAPI.Test
     public class PriceConversionControllerTests
     {
         [TestMethod]
-        public void Get_DefaultParameters_ReturnsOk()
+        public async Task Get_DefaultParameters_ReturnsOk()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
-
-            mockService.Setup(x => x.ConvertPrice("a", "a", 1)).Returns(new PriceConversion
-            {
-                Price = 1,
-                TargetCurrency = "a"
-            });
-
+            mockService.Setup(x => x.ConvertPriceAsync("a", "a", 1)).ReturnsAsync(1);
             PriceConversionController controller = new PriceConversionController(mockService.Object);
 
             // Act
-            IActionResult response = controller.Get("a", "a", 1);
+            IActionResult response = await controller.GetAsync("a", "a", 1);
 
             // Assert
             Assert.IsInstanceOfType(response, typeof(OkObjectResult));
@@ -38,14 +33,32 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public void Get_NullSourceParameter_ReturnsBadRequest()
+        public async Task Get_NoConversion_ReturnsNotFound()
+        {
+            // Arrange
+            Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
+            mockService.Setup(x => x.ConvertPriceAsync("a", "a", 1)).ReturnsAsync((double?)null);
+            PriceConversionController controller = new PriceConversionController(mockService.Object);
+
+            // Act
+            IActionResult response = await controller.GetAsync("a", "a", 1);
+
+            // Assert
+            Assert.IsInstanceOfType(response, typeof(NotFoundObjectResult));
+            NotFoundObjectResult actionResult = response as NotFoundObjectResult;
+
+            Assert.AreEqual(404, actionResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Get_NullSourceParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
             PriceConversionController controller = new PriceConversionController(mockService.Object);
 
             // Act
-            IActionResult response = controller.Get(null, "a", 1);
+            IActionResult response = await controller.GetAsync(null, "a", 1);
 
             // Assert
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -55,14 +68,14 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public void Get_EmptySourceParameter_ReturnsBadRequest()
+        public async Task Get_EmptySourceParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
             PriceConversionController controller = new PriceConversionController(mockService.Object);
 
             // Act
-            IActionResult response = controller.Get("", "a", 1);
+            IActionResult response = await controller.GetAsync("", "a", 1);
 
             // Assert
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -72,14 +85,14 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public void Get_NullTargetParameter_ReturnsBadRequest()
+        public async Task Get_NullTargetParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
             PriceConversionController controller = new PriceConversionController(mockService.Object);
 
             // Act
-            IActionResult response = controller.Get("a", null, 1);
+            IActionResult response = await controller.GetAsync("a", null, 1);
 
             // Assert
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -89,14 +102,14 @@ namespace PriceConversionAPI.Test
         }
 
         [TestMethod]
-        public void Get_SourceTargetParameter_ReturnsBadRequest()
+        public async Task Get_SourceTargetParameter_ReturnsBadRequest()
         {
             // Arrange
             Mock<IPriceConversionService> mockService = new Mock<IPriceConversionService>();
             PriceConversionController controller = new PriceConversionController(mockService.Object);
 
             // Act
-            IActionResult response = controller.Get("a", "", 1);
+            IActionResult response = await controller.GetAsync("a", "", 1);
 
             // Assert
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));

@@ -1,15 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Polly;
+using PriceConversionAPI.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PriceConversionAPI
 {
@@ -24,8 +20,22 @@ namespace PriceConversionAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+
+            services.AddScoped<IPriceConversionService, PriceConversionService>();
+            services.AddScoped<IPriceCalculatorService, PriceCalculatorService>();
+
+            services.AddHttpClient<IExchangeRateService, ExchangeRateService>(client =>
+            {
+                client.BaseAddress = new Uri("https://trainlinerecruitment.github.io/exchangerates");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            })
+            .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
+            {
+                TimeSpan.FromSeconds(1),
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromSeconds(10)
+            }));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -16,6 +16,6 @@ namespace PriceConversionAPI
         public string BaseCurrency { get; set; }
 
         [JsonPropertyName("rates")]
-        public IDictionary<string,string> ExchangeRates { get; set; }
+        public IDictionary<string, double> ExchangeRates { get; set; }
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace PriceConversionAPI.Services
+﻿using System.Threading.Tasks;
+
+namespace PriceConversionAPI.Services
 {
     public interface IExchangeRateService
     {
-        double GetExchangeRate(string sourceCurrency, string targetCurrency);
+        Task<double?> GetExchangeRateAsync(string sourceCurrency, string targetCurrency);
     }
 }

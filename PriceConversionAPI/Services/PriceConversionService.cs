@@ -1,4 +1,6 @@
-﻿namespace PriceConversionAPI.Services
+﻿using System.Threading.Tasks;
+
+namespace PriceConversionAPI.Services
 {
     public class PriceConversionService : IPriceConversionService
     {
@@ -11,16 +13,18 @@
             this.priceCalculatorService = priceCalculatorService;
         }
 
-        public PriceConversion ConvertPrice(string sourceCurrency, string targetCurrency, double price)
+        public async Task<double?> ConvertPriceAsync(string sourceCurrency, string targetCurrency, double price)
         {
-            double rate = this.exchangeRateService.GetExchangeRate(sourceCurrency, targetCurrency);
-            double convertedPrice = this.priceCalculatorService.CalculatePrice(price, rate);
+            double? rate = await this.exchangeRateService.GetExchangeRateAsync(sourceCurrency, targetCurrency);
 
-            return new PriceConversion
+            if (rate.HasValue)
             {
-                TargetCurrency = targetCurrency,
-                Price = convertedPrice
-            };
+                return this.priceCalculatorService.CalculatePrice(price, rate.Value);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

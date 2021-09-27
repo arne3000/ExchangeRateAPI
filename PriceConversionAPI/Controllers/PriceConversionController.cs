@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PriceConversionAPI.Services;
+using System.Threading.Tasks;
 
 namespace PriceConversionAPI.Controllers
 {
@@ -8,7 +8,6 @@ namespace PriceConversionAPI.Controllers
     [Route("api/[controller]")]
     public class PriceConversionController : ControllerBase
     {
-        //private readonly ILogger<PriceConversionController> logger;
         private readonly IPriceConversionService priceConversionService;
 
         public PriceConversionController(IPriceConversionService priceConversionService)
@@ -17,7 +16,7 @@ namespace PriceConversionAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string source, string target, double price)
+        public async Task<IActionResult> GetAsync(string source, string target, double price)
         {
             if (string.IsNullOrWhiteSpace(source))
             {
@@ -29,9 +28,20 @@ namespace PriceConversionAPI.Controllers
                 return BadRequest("target currency must be supplied");
             }
 
-            PriceConversion priceConverted = this.priceConversionService.ConvertPrice(source, target, price);
-            
-            return Ok(priceConverted);
+            double? priceConverted = await this.priceConversionService.ConvertPriceAsync(source, target, price);
+
+            if (priceConverted.HasValue)
+            {
+                return Ok(new PriceConversion
+                {
+                    TargetCurrency = target,
+                    Price = priceConverted.Value
+                });
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

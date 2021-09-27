@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PriceConversionAPI.Services;
 
 namespace PriceConversionAPI
 {
@@ -17,11 +15,6 @@ namespace PriceConversionAPI
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                })
-                .ConfigureServices(services => {
-                    services.AddScoped<IPriceConversionService, PriceConversionService>();
-                    services.AddScoped<IExchangeRateService, ExchangeRateService>();
-                    services.AddScoped<IPriceCalculatorService, PriceCalculatorService>();
                 });
     }
 }

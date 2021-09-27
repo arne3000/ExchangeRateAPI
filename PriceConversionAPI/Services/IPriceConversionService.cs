@@ -1,7 +1,9 @@
-﻿namespace PriceConversionAPI.Services
+﻿using System.Threading.Tasks;
+
+namespace PriceConversionAPI.Services
 {
     public interface IPriceConversionService
     {
-        PriceConversion ConvertPrice(string sourceCurrency, string targetCurrency, double price);
+        Task<double?> ConvertPriceAsync(string sourceCurrency, string targetCurrency, double price);
     }
 }
