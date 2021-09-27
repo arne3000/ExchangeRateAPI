@@ -17,4 +17,4 @@ e.g.
  - Would be good to add intergation tests on the api
  - Could maybe provice better feedback if the api is down
  - Could improve the validation of the currency codes to check its ISO and give feedback
-
+ - Add the base address as an environment variable
