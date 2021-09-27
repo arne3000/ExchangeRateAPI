@@ -6,8 +6,9 @@ namespace PriceConversionAPI.Test
     public class PriceConversionServiceTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void ConvertPrice_NoSourceCurrency_()
         {
+
         }
     }
 }

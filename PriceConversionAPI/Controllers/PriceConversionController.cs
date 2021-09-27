@@ -1,27 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PriceConversionAPI.Services;
 
 namespace PriceConversionAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PriceConversionController : ControllerBase
     {
-        private readonly ILogger<PriceConversionController> _logger;
+        //private readonly ILogger<PriceConversionController> logger;
+        private readonly IPriceConversionService priceConversionService;
 
-        public PriceConversionController(ILogger<PriceConversionController> logger)
+        public PriceConversionController(IPriceConversionService priceConversionService)
         {
-            _logger = logger;
+            this.priceConversionService = priceConversionService;
         }
 
         [HttpGet]
-        public PriceConversion Get(string source, string target, double price)
+        public IActionResult Get(string source, string target, double price)
         {
-            return new PriceConversion
+            if (string.IsNullOrWhiteSpace(source))
             {
-                TargetCurrency = target,
-                Price = price
-            };
+                return BadRequest("Source currency must be supplied");
+            }
+
+            if (string.IsNullOrWhiteSpace(target))
+            {
+                return BadRequest("target currency must be supplied");
+            }
+
+            PriceConversion priceConverted = this.priceConversionService.ConvertPrice(source, target, price);
+            
+            return Ok(priceConverted);
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace PriceConversionAPI.Services
+﻿namespace PriceConversionAPI.Services
 {
-    public class ExchangeRateService
+    public class ExchangeRateService : IExchangeRateService
     {
+        public double GetExchangeRate(string sourceCurrency, string targetCurrency)
+        {
+            return 1;
+        }
     }
 }
